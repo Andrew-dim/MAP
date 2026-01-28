@@ -1,0 +1,85 @@
+:root{
+  --bg:#0b1220;
+  --muted:#9aa7bd;
+  --text:#e9eef7;
+  --line:rgba(255,255,255,.12);
+  --accent:#1d4ed8;
+  --accent2:#0ea5e9;
+  --error:#ef4444;
+  --ok:#22c55e;
+  --radius:14px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:"Segoe UI",Roboto,system-ui,-apple-system,sans-serif;color:var(--text)}
+body{
+  background:
+    radial-gradient(1200px 700px at 20% 10%, rgba(14,165,233,.16), transparent 60%),
+    radial-gradient(900px 600px at 90% 30%, rgba(29,78,216,.18), transparent 55%),
+    var(--bg);
+}
+
+.wrap{min-height:100%;display:grid;place-items:center;padding:24px}
+
+.card{
+  width:min(420px,100%);
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:22px;
+  box-shadow:0 18px 50px rgba(0,0,0,.45);
+  backdrop-filter:blur(14px);
+}
+
+h1{margin:0 0 6px 0;font-size:22px}
+.sub{margin:0 0 18px 0;color:var(--muted);font-size:13px}
+
+.field{display:block;margin:12px 0}
+.field span{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+
+.field input{
+  width:100%;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:rgba(0,0,0,.22);
+  color:var(--text);
+  padding:11px 12px;
+  outline:none;
+  letter-spacing: 4px;
+  text-align:center;
+  font-size:18px;
+}
+
+.field input:focus{
+  border-color:rgba(14,165,233,.6);
+  box-shadow:0 0 0 3px rgba(14,165,233,.18);
+}
+
+.btn{
+  width:100%;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:12px;
+  padding:11px 12px;
+  font-weight:700;
+  cursor:pointer;
+  color:white;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  box-shadow:0 10px 26px rgba(29,78,216,.25);
+  margin-top: 10px;
+}
+
+.btn.secondary{
+  background: rgba(255,255,255,.06);
+  box-shadow:none;
+}
+
+.btn:hover{filter:brightness(1.05)}
+.btn:active{transform:translateY(1px)}
+
+.msg{margin:12px 0 0 0;font-size:12px;color:var(--muted);min-height:16px}
+.msg.ok{color:var(--ok)}
+.msg.err{color:var(--error)}
+
+.foot{margin:14px 0 0 0;font-size:12px;color:var(--muted);text-align:center}
+.link{color:#b8c7ff;text-decoration:none}
+.link:hover{text-decoration:underline}

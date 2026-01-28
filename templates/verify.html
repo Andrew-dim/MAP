@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Verify OTP</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='verify.css') }}">
+</head>
+<body>
+  <main class="wrap">
+    <section class="card" aria-label="Verify OTP">
+      <h1>Verify your email</h1>
+      <p class="sub">Enter the 6-digit code we sent to your email.</p>
+
+      <form id="verifyForm" novalidate>
+        <label class="field">
+          <span>OTP code</span>
+          <input id="code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required />
+        </label>
+
+        <button class="btn" type="submit">Verify</button>
+
+        <button class="btn secondary" type="button" id="resendBtn">Resend code</button>
+
+        <p id="msg" class="msg" role="status" aria-live="polite"></p>
+
+        <p class="foot">
+          <a class="link" href="/login">Back to login</a>
+        </p>
+      </form>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='verify.js') }}"></script>
+</body>
+</html>

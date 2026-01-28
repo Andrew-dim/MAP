@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=1">
+  <link rel="stylesheet" href="static/login.css" />
+</head>
+<body>
+  <main class="wrap">
+    <section class="card" aria-label="Login">
+      <div class="login-logo">
+       <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+      </div>
+      <h1>Sign in</h1>
+      <form id="loginForm" novalidate>
+        <label class="field">
+          <span>Username</span>
+          <input id="username" name="username" type="text" autocomplete="username" required />
+        </label>
+
+        <label class="field">
+          <span>Password</span>
+          <input id="password" name="password" type="password" autocomplete="current-password" required />
+        </label>
+
+        <div class="row">
+          <label class="chk">
+            <input id="remember" type="checkbox" />
+            <span>Remember me</span>
+          </label>
+
+          <a class="link" href="#" id="forgotLink">Forgot password?</a>
+        </div>
+
+        <button class="btn" type="submit">Login</button>
+
+        <p id="msg" class="msg" role="status" aria-live="polite"></p>
+        <p class="signup"> Don’t have an account?<a href="/register">Sign up</a>
+</p>
+      </form>
+    </section>
+  </main>
+
+  <script src="/static/login.js"></script>
+</body>
+</html>

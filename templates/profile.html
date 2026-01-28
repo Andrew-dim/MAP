@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Profile</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
+</head>
+<body>
+  <main class="wrap">
+    <section class="card">
+      <h1>Profile</h1>
+
+      <div class="row">
+        <span>Username</span>
+        <strong>{{ user.username }}</strong>
+      </div>
+
+      <div class="row">
+        <span>Email</span>
+        <strong>{{ user.email }}</strong>
+      </div>
+
+      <div class="row">
+        <span>Role</span>
+        <strong>{{user.roles}}</strong>
+      </div>
+
+      <div class="row">
+        <span>Status</span>
+        <strong>{{ user.status }}</strong>
+      </div>
+
+      <div class="row">
+        <span>Created</span>
+        <strong>{{ user.created_at.strftime("%Y-%m-%d %H:%M") }}</strong>
+      </div>
+
+      <button class="logout-btn" onclick="logout()">Logout</button>
+</section>
+</main>
+
+<script src="{{ url_for('static', filename='profile.js') }}"></script>
+</body>
+</html>

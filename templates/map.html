@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Multi-Sensor SAR Analysis Platform</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=2">
+  <link rel="stylesheet" href="{{ url_for('static', filename='openlayers/ol.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body>
+  <select id="layer-select" title="Basemap">
+    <option value="osm">OSM</option>
+    <option value="satellite" selected>Google Satellite</option>
+  </select>
+
+  <select id="satellite-select" title="Satellite">
+    <option value="Sentinel-1">Sentinel-1 (C-band SAR)</option>
+    <option value="Sentinel-2" selected>Sentinel-2 (Optical)</option>
+    <option value="NISAR">🛰️ NISAR (L+S Quad-pol)</option>
+  </select>
+
+  <button id="profile" class="account-btn" type="button" aria-label="Profile">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="8" r="4"></circle>
+      <path d="M4 20c1.5-3 5-4 8-4s6.5 1 8 4"></path>
+    </svg>
+    <span class="tooltip">Profile</span>
+  </button>
+
+  <div id="map" tabindex="0"></div>
+
+  <div id="info-banner" class="info-banner" style="display:none;">
+    <span id="info-text"></span>
+    <button id="info-close" class="info-close" aria-label="Close">×</button>
+  </div>
+
+  <div id="bottom-panel" class="panel">
+    <div id="mouse-coords">lon: -, lat: -</div>
+    <div class="panel-handle">
+      <button id="panel-toggle" class="handle-btn" aria-label="Toggle panel">▲</button>
+    </div>
+
+    <div id="panel-content" class="panel-content collapsed">
+      <div class="row">
+        <div class="card time-card">
+          <div class="dt-col">
+            <div class="card-title glow">From</div>
+            <input id="from-dt" class="dt-input" type="datetime-local" />
+          </div>
+          <div class="dt-col">
+            <div class="card-title glow">To</div>
+            <input id="to-dt" class="dt-input" type="datetime-local" />
+          </div>
+        </div>
+
+        <div id="status" class="status">
+          Hold Shift to start. Press C/Ψ to add vertices. Release Shift to finish.
+        </div>
+
+        <div class="card cloud-card" id="cloud-card">
+          <div class="card-title glow">Max Cloud Cover (%)</div>
+          <input id="cloud-max" class="spin" type="number" min="0" max="100" value="30" />
+        </div>
+
+        <!-- Resolution Mode Card -->
+        <div id="resolution-card" class="card resolution-card">
+          <div class="card-title glow">Resolution</div>
+          <div class="resolution-options">
+            <label class="resolution-option selected" data-mode="original">
+              <input type="radio" name="resolution-mode" value="original" checked />
+              <span>Original</span>
+            </label>
+            <label class="resolution-option" data-mode="enhanced">
+              <input type="radio" name="resolution-mode" value="enhanced" />
+              <span>Enhanced (SR)</span>
+            </label>
+          </div>
+          <div id="resolution-warning" class="resolution-warning" style="display:none;">
+            ⚠️ For visualization only
+          </div>
+        </div>
+
+        <div id="nisar-options" class="card nisar-card" style="display:none;">
+          <div class="card-title glow nisar-title">🛰️ NISAR Configuration</div>
+          <div class="option-row">
+            <label class="option-label">Frequency:</label>
+            <select id="nisar-frequency" class="nisar-select">
+              <option value="L-band" selected>L-band (1.25 GHz)</option>
+              <option value="S-band">S-band (3.2 GHz)</option>
+              <option value="Both">Both (L+S)</option>
+            </select>
+          </div>
+          <div class="option-row">
+            <label class="option-label">Product Level:</label>
+            <select id="nisar-level" class="nisar-select">
+              <option value="L1-GSLC">L1 GSLC (Geocoded SLC)</option>
+              <option value="L2-GCOV" selected>L2 GCOV (Polarimetric Covariance)</option>
+              <option value="L2-InSAR">L2 InSAR (Interferometry)</option>
+            </select>
+          </div>
+          <div class="option-row">
+            <label class="option-label">Analysis Mode:</label>
+            <select id="nisar-analysis" class="nisar-select">
+              <option value="basic">Basic (Backscatter only)</option>
+              <option value="polarimetric" selected>Polarimetric Decomposition</option>
+              <option value="target-detection">Target Detection</option>
+              <option value="change-detection">Change Detection</option>
+              <option value="military">🎖️ Military Suite (All)</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="military-panel" class="card military-card" style="display:none;">
+          <div class="card-title glow military-title">🎖️ Military Analysis Features</div>
+          <div class="feature-grid">
+            <label class="feature-checkbox">
+              <input type="checkbox" id="feat-ship-detection" checked />
+              <span>Ship Detection (CFAR)</span>
+            </label>
+            <label class="feature-checkbox">
+              <input type="checkbox" id="feat-vehicle-detection" />
+              <span>Vehicle/Convoy Detection</span>
+            </label>
+            <label class="feature-checkbox">
+              <input type="checkbox" id="feat-building-detection" checked />
+              <span>Building Detection</span>
+            </label>
+            <label class="feature-checkbox">
+              <input type="checkbox" id="feat-camouflage-detection" />
+              <span>Camouflage Detection</span>
+            </label>
+            <label class="feature-checkbox">
+              <input type="checkbox" id="feat-terrain-classification" checked />
+              <span>Terrain Classification</span>
+            </label>
+            <label class="feature-checkbox">
+              <input type="checkbox" id="feat-deformation" />
+              <span>Surface Deformation (InSAR)</span>
+            </label>
+          </div>
+          <div class="threshold-section">
+            <div class="threshold-title">Detection Sensitivity</div>
+            <div class="slider-container">
+              <label>CFAR Threshold:</label>
+              <input type="range" id="cfar-threshold" min="1" max="10" value="3" step="0.5" />
+              <span id="cfar-value">3.0 σ</span>
+            </div>
+            <div class="slider-container">
+              <label>Min Target Size:</label>
+              <input type="range" id="min-target-size" min="5" max="500" value="25" step="5" />
+              <span id="size-value">25 px</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-col">
+          <button id="clear-all" class="btn">Clear All</button>
+          <button id="remove-last" class="btn">Remove Last</button>
+          <button id="submit" class="btn primary">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='openlayers/ol.js') }}"></script>
+  <script src="{{ url_for('static', filename='map.js') }}"></script>
+</body>
+</html>

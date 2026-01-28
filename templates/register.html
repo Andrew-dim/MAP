@@ -1,0 +1,64 @@
+<!-- templates/register.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Register</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
+</head>
+<body>
+  <main class="wrap">
+    <section class="card" aria-label="Register">
+      <h1>Create account</h1>
+      <p class="sub">Fill in your details to register.</p>
+
+      <form id="registerForm" novalidate>
+        <div class="grid">
+          <label class="field">
+            <span>Name</span>
+            <input id="name" name="name" type="text" autocomplete="given-name" required />
+          </label>
+
+          <label class="field">
+            <span>Last name</span>
+            <input id="lastname" name="lastname" type="text" autocomplete="family-name" required />
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Email</span>
+          <input id="email" name="email" type="email" autocomplete="email" required />
+        </label>
+
+        <label class="field">
+          <span>Username</span>
+          <input id="username" name="username" type="text" autocomplete="username" required />
+        </label>
+
+        <label class="field">
+          <span>Password</span>
+          <input id="password" name="password" type="password" autocomplete="new-password" minlength="8" required />
+        </label>
+
+        <label class="field">
+          <span>Confirm password</span>
+          <input id="password2" name="password2" type="password" autocomplete="new-password" minlength="8" required />
+        </label>
+
+        <button class="btn" type="submit">Register</button>
+
+        <p id="msg" class="msg" role="status" aria-live="polite"></p>
+
+        <p class="foot">
+          Already have an account?
+          <a class="link" href="/login">Sign in</a>
+        </p>
+      </form>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='register.js') }}"></script>
+</body>
+</html>
